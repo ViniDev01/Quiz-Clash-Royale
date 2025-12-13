@@ -1,7 +1,7 @@
 
 import React, {useEffect, useState} from 'react';
-import BannerImg from '../../assets/banner.png';
-import banner1280 from "../../assets/banner1280.png";
+import BannerImg from '../../assets/Banner.png';
+import banner1280 from "../../assets/Banner1280.png";
 import { Link } from 'react-router-dom';
 
 import {db} from "../../firebase/firebaseConfig";
