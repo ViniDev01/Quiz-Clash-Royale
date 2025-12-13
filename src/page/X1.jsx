@@ -78,6 +78,7 @@ function X1() {
         setShowFeedback(false);
         setSelectedOption(null);
       } else {
+        verificarPoints();
         setQuizStarted('result');
       }
     }, 1000);
@@ -149,7 +150,7 @@ function X1() {
     }
   }
   return (
-    <div className="min-h-screen bg-background text-foreground flex justify-center items-center">
+    <div className="min-h-screen bg-background text-foreground flex justify-center items-center px-[4%]">
         <button onClick={handleBack}>
           <Undo2 className="absolute top-3 left-4 cursor-pointer hover:text-gold duration-300"/>
         </button>
@@ -157,27 +158,27 @@ function X1() {
           className="absolute top-3 left-16 cursor-pointer hover:text-gold duration-300"
           onClick={resetQuiz}
         />
-        <div className="max-w-3xl w-full p-8 md:p-12 text-center flex flex-col justify-center items-center backdrop-blur bg-card/95 border-2 border-primary/30 shadow-2xl rounded-2xl">
+        <div className="max-w-3xl w-full p-4 xr:p-8 md:p-12 text-center flex flex-col justify-center items-center backdrop-blur bg-card/95 border-2 border-primary/30 shadow-2xl rounded-2xl">
           {quizStarted === "start" && ( 
             <>
               <Crown className="w-20 h-20 mx-auto text-gold mb-4 animate-pulse"/>
-              <h1 className="text-5xl md:text-7xl font-bold mb-4 bg-gold bg-clip-text text-transparent">Quiz Clash Royale</h1>
-              <p className="mb-8 text-xl text-muted-foreground">Mostre quem vence nos confrontos 1v1!</p>
+              <h1 className="text-3xl so:text-5xl md:text-7xl font-bold mb-4 bg-gold bg-clip-text text-transparent">Quiz Clash Royale</h1>
+              <p className="mb-8 so:text-xl text-muted-foreground">Mostre quem vence nos confrontos 1v1!</p>
 
               <div className="space-y-6 mb-8">
                 <div className="flex items-center justify-center gap-4 text-foreground/80">
                   <Zap className="w-6 h-6 text-gold" />
-                  <span className="text-lg">{currentQuestion.length} {currentQuestion.length > 1 ? "perguntas desafiadoras" : "pergunta desafiadora" }</span>
+                  <span className="so:text-lg">{currentQuestion.length} {currentQuestion.length > 1 ? "perguntas desafiadoras" : "pergunta desafiadora" }</span>
                 </div>
 
                 <div className="flex items-center justify-center gap-4 text-foreground/80">
-                  <Trophy className="w-6 h-6 text-gold" />
-                  <span className="text-lg">Prove que você entende tudo sobre duelos de cartas!</span>
+                  <Trophy className="min-w-6 h-6 text-gold" />
+                  <span className="so:text-lg">Prove que você entende tudo sobre duelos de cartas!</span>
                 </div>
               </div>
 
               <button 
-              className="bg-gold text-background font-bold text-xl px-12 py-3 hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-gold/50 rounded-2xl cursor-pointer"
+              className="bg-gold text-background font-bold text-xl px-6 py-3 so:px-12 hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-gold/50 rounded-2xl cursor-pointer"
               onClick={startQuiz}
               >
                 Iniciar Quiz
@@ -228,14 +229,14 @@ function X1() {
                   <img 
                     src={img1} 
                     alt="" 
-                    className={`${getAnswerClass(0)} rounded-2xl cursor-pointer hover:scale-105 transition-all duration-300 w-[283px] h-[249px]`}
+                    className={`${getAnswerClass(0)} rounded-2xl cursor-pointer hover:scale-105 transition-all duration-300 w-[43.034%] xr:w-[45.99%] xs:w-[283px] xs:h-[249px]`}
                     onClick={()=>handleAnswerClick(0)}
                   />
                   <h1 className="text-2xl select-none">X</h1>
                   <img 
                     src={img2} 
                     alt="" 
-                    className={`${getAnswerClass(1)} rounded-2xl cursor-pointer hover:scale-105 transition-all duration-300 w-[283px] h-[249px]`}
+                    className={`${getAnswerClass(1)} rounded-2xl cursor-pointer hover:scale-105 transition-all duration-300 w-[43.034%] xr:w-[45.99%] xs:w-[283px] xs:h-[249px]`}
                     onClick={()=>handleAnswerClick(1)}
                   />
                 </div>                
