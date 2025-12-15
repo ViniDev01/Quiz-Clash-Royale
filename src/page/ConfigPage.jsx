@@ -113,7 +113,7 @@ export default function ConfigPage() {
         border
         transition-all duration-300
         
-        lg:w-64 lg:border-r lg:static lg:block
+        lg:w-76 lg:border-r lg:static lg:block
         ${menuMobileOpen ? "block" : "hidden lg:block"}
       `}>
         <h2 className="text-2xl font-bold mb-6 text-gold hidden lg:block">

@@ -40,7 +40,7 @@ function Banner() {
           return 0
         }
       })
-    }, 600000);
+    }, 100000);
 
     return () => {clearInterval(interval)}
 

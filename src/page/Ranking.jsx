@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import Header from "../components/Home/Header";
+import DetalhesRanking from "../components/Model/DetalhesRanking";
 
 import Ouro from "../assets/ouro.png";
 import Prata from "../assets/prata.png";
@@ -20,6 +21,9 @@ export default function Ranking() {
     const [pointsGeral, setPointsGeral] = useState(0);
     const [ranking, setRanking] = useState([]);
     const [userRank, setUserRank] = useState(null);
+    const [isOpen, setIsOpen] = useState(false);
+    const boxRef = useRef();
+    const containerRef = useRef();
 
     useEffect(()=>{
         if(!userData?.pointsQuizzes) return;
@@ -95,6 +99,23 @@ export default function Ranking() {
         }
     }
 
+    useEffect(() => {
+        function handleClickOutside(e) {
+          // Se clicar fora do nav E fora da imagem, fecha
+          if (
+            boxRef.current &&
+            !boxRef.current.contains(e.target) &&
+            containerRef.current &&
+            !containerRef.current.contains(e.target)
+          ) {
+            setIsOpen(false);
+          }
+        }
+    
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+      }, []);
+
     
 
     return (
@@ -109,32 +130,43 @@ export default function Ranking() {
                     <div className="w-full flex flex-col border bg-muted text-white p-5 rounded-sm">
                         <div className="flex justify-between mb-10">
                             <h2 className="text-2xl">Regras do Jogo</h2>
-                            <button className="cursor-pointer flex items-center gap-2 hover:text-accent transition-colors duration-300">Detalhes <MoveRight /></button>
+                            <button 
+                                ref={containerRef}
+                                className="cursor-pointer flex items-center gap-2 hover:text-accent transition-colors duration-300"
+                                onClick={() => setIsOpen(true)}
+                            >
+                                Detalhes 
+                                <MoveRight />
+                            </button>
                         </div>
 
-                        <p className="text-gray-400">
-                            Lorem ipsum, dolor sit amet consectetur adipisicing elit. 
-                            Temporibus doloribus, rerum earum voluptates praesentium 
-                            ullam libero, expedita animi odit, vitae commodi modi blanditiis? 
-                            Beatae ea suscipit unde repellendus. Animi, facilis?
-                        </p>
-                    </div>
-                    <div className="w-full flex justify-between text-white gap-5 mt-5">
-                        <div className="w-1/2 bg-muted border flex flex-col justify-center items-center gap-1 p-2.5 rounded-sm">
-                            <span>Total de pontos</span>
-                            <span className="text-gray-400 flex">
-                                <img src={Trofeu} alt="" className="w-7" />
-                                {pointsGeral || 0}
-                            </span>
-                        </div>
-                        <div className="w-1/2 bg-muted border flex flex-col justify-center items-center gap-1 p-2.5 rounded-sm">
-                            <span>  Seu lugar no ranking</span>
-                            {userRank && (
-                                <span className="text-gray-400 flex gap-1"> <Trophy className="text-accent" /> {userRank}</span>
-                            )}
-                            
+                        <div className="text-gray-400">
+                            <p>Requisitos para pontuar</p>
+                            <p>É obrigatório estar logado para participar do ranking.</p>
+                            <p>Usuários não logados podem jogar, mas não pontuam.</p>
+                            <p>Cada conta possui um ranking único (não é por dispositivo)...</p>
+
                         </div>
                     </div>
+                    {user && (
+                        <div className="w-full flex justify-between text-white gap-5 mt-5">
+                            <div className="w-1/2 bg-muted border flex flex-col justify-center items-center gap-1 p-2.5 rounded-sm">
+                                <span>Total de pontos</span>
+                                <span className="text-gray-400 flex">
+                                    <img src={Trofeu} alt="" className="w-7" />
+                                    {pointsGeral || 0}
+                                </span>
+                            </div>
+                            <div className="w-1/2 bg-muted border flex flex-col justify-center items-center gap-1 p-2.5 rounded-sm">
+                                <span>  Seu lugar no ranking</span>
+                                {userRank && (
+                                    <span className="text-gray-400 flex gap-1"> <Trophy className="text-accent" /> {userRank}</span>
+                                )}
+                                
+                            </div>
+                        </div>
+                    )}
+                    
                 </div>
 
                 <div className="w-full xs:w-1/2 h-fit bg-muted border text-white p-5 rounded-sm">
@@ -161,6 +193,10 @@ export default function Ranking() {
                         
                     </ul>
                 </div>
+
+                {isOpen && (
+                    <DetalhesRanking setIsOpen={setIsOpen} boxRef={boxRef} />
+                )}
             </div>
         </>
     )
