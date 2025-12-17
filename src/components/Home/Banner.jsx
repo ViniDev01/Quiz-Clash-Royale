@@ -78,7 +78,9 @@ function Banner() {
       
       <Link 
         to={`/quiz/mode/x1/${nextId}`} 
-        className='btn-banner absolute bottom-[25%] left-[50%] transform -translate-x-1/2 px-12 py-2 bg-terciaria text-white cursor-pointer rounded-2xl text-[20px] font-semibold transition-all duration-500 hover:scale-110'
+        className='btn-banner absolute bottom-[25%] left-[50%] -translate-x-1/2 
+        px-12 py-2 bg-accent text-black cursor-pointer rounded-2xl text-[20px] 
+        font-semibold transition-all duration-500 hover:scale-110'
       >
         Iniciar
       </Link>

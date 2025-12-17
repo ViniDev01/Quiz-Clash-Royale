@@ -68,8 +68,12 @@ function Header() {
               </nav>
           </div>
         ) : (
-          <Link to='/login' className='absolute top-1/2 right-5 -translate-y-1/2'>
-            <CircleUserRound className='text-terciaria cursor-pointer' />
+          <Link 
+            to='/login' 
+            className='absolute top-1/2 right-5 -translate-y-1/2' 
+            aria-label="Ir para a página de login"
+          >
+            <CircleUserRound className='text-terciaria cursor-pointer' aria-hidden="true" />
           </Link>
         )}
     </header>
