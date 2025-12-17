@@ -74,7 +74,8 @@ function Login() {
             await setDoc(doc(db, "users", uid), {
                 email: email,
                 username: username.toLowerCase(),
-                criadoEm: new Date(),
+                createdAt: new Date(),
+                poinstGeral: 0
             });
 
             navigate("/");

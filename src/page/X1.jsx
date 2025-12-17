@@ -25,7 +25,7 @@ function X1() {
   const [showFeedback, setShowFeedback] = useState(false); // Mostrar feedback de resposta
   const [selectedOption, setSelectedOption] = useState(null); // Opção selecionada pelo usuário
   const [score, setScore] = useState(0); // Pontuação do usuário
-  const [points, setPoints] = useState(1);
+  const [points, setPoints] = useState(0);
 
   const startQuiz = () => {
     setQuizStarted('quiz');
@@ -48,29 +48,35 @@ function X1() {
   // Buscar pergunta atual do quiz
   useEffect(() => {
     const fetchQuestion = async () => {
-      const colRef = await getDocs (collection(db, "vs", id, "questions"));
-      const snapshot = colRef.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data()
-      }));
+      try {
+        // Buscar quizzes de x1
+        const colRef = await getDocs (collection(db, "vs", id, "questions"));
+        const snapshot = colRef.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data()
+        }));
 
-      setCurrentQuestion(snapshot);
+        setCurrentQuestion(snapshot);
+      }catch (error) {
+        console.error("Error fetching quizzes X1:" + error);
+      }
       
     };
     fetchQuestion();
   }, []);
 
-  const perguntaAtual = currentQuestion?.[indexAtual];
+  const perguntaAtual = currentQuestion[indexAtual];
 
   const handleAnswerClick = (i) => {
     if(showFeedback)return;
     setShowFeedback(true);
     setSelectedOption(i);
 
-    if(i === perguntaAtual.respostaCerta){
-      setScore(score + 1);
+    if (i === perguntaAtual.respostaCerta) {
+      
+      setScore(prev => prev + 1);
 
-      if(!user) {
+      if (user) {
         setPoints(prev => prev + 1);
       }
     }
@@ -96,13 +102,13 @@ function X1() {
   function verificarPoints() {
     if(!user || !userData) return;
 
-    const pointsAtuais = userData.pointsGeral?.[id] || 0;
+    const pointsAtuais = userData.pointsQuizzes?.[id] || 0;
 
     if (points > pointsAtuais) {
       const userRef = doc(db, "users", user.uid);
 
       updateDoc(userRef, {
-        [`pointsGeral.${id}`]: points
+        [`pointsQuizzes.${id}`]: points
       });
     }
   }

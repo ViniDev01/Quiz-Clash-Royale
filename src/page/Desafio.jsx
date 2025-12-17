@@ -61,7 +61,7 @@ function Desafio() {
         setQuiz(aleaData);
 
       }catch (error) {
-        console.error("Error fetching quizzes: ", error);
+        console.error("Error fetching quizzes Aleatórios: ", error);
       }
     }
 

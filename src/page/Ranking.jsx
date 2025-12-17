@@ -19,13 +19,14 @@ import { Helmet } from "react-helmet-async";
 export default function Ranking() {
     const navigate = useNavigate();
     const {user, userData} = useAuth();
-    const [pointsGeral, setPointsGeral] = useState(0);
+    const [pointsGeral, setPointsGeral] = useState(null); // Os pontos geral do user individual 
     const [ranking, setRanking] = useState([]);
     const [userRank, setUserRank] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
     const boxRef = useRef();
     const containerRef = useRef();
 
+    // Somar os Pontos dos quizzes
     useEffect(()=>{
         if(!userData?.pointsQuizzes) return;
 
@@ -33,50 +34,48 @@ export default function Ranking() {
         .reduce((total, value) => total + value, 0);
 
         setPointsGeral(total);
-    }, [userData]);
+    }, [userData?.pointsQuizzes]);
 
     useEffect(()=>{
-        if (!user || pointsGeral === null) return;
-        const userRef = doc(db, "users", user.uid);
+        if(!user || pointsGeral === null) return;
 
-        updateDoc(userRef, {
-            [`pointsGeral`]: pointsGeral
-        }).then(() => {
-        // Atualiza o ranking depois do update
-        const generalPoints = async () => {
-            const q = query(
-                collection(db, "users"),
-                orderBy("pointsGeral", "desc"),
-                limit(10)
-            );
-
-            const snapshot = await getDocs(q);
-            const usersRank = snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            }));
-
-            setRanking(usersRank);
+        const savePointsGeral = async () => {
+            try {
+                await updateDoc(doc(db, "users", user.uid), {
+                    pointsGeral: pointsGeral,
+                    pointsUpdatedAt: serverTimestamp()
+                })
+            }catch (error) {
+                console.error("Erro ao salvar pointsGeral:", error);
+            }
         }
 
-        generalPoints();
-    });
-
+        savePointsGeral();
     }, [pointsGeral, user]);
 
+    // Chama o getUserRank e coloca no estado setUserRank
     useEffect(()=>{
-        if(pointsGeral === undefined) return;
+        if(pointsGeral === null) return;
+
+        let isMounted = true;
 
         const fetchRank = async () => {
             const rank = await getUserRank(pointsGeral);
-            setUserRank(rank);
+            if (isMounted) {
+                setUserRank(rank);
+            }
         }
 
         fetchRank();
+        
+        return () => {
+            isMounted = false;
+        };
     }, [pointsGeral]);
 
+    // Coloca o rank do usuario
     async function getUserRank(pointsGeral) {
-        if(pointsGeral === undefined) return null;
+        if(pointsGeral === null) return;
 
         const q =  query(
             collection(db, "users"),
@@ -90,6 +89,29 @@ export default function Ranking() {
         return rank;
     }
 
+    useEffect(()=>{
+        const generalPoints = async () => {
+            const q = query(
+                collection(db, "users"),
+                orderBy("pointsGeral", "desc"),
+                limit(10)
+            );      
+            
+            const snapshot = await getDocs(q);
+
+            setRanking(
+                snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }))
+            );
+        }
+
+        generalPoints();
+    }, []);
+
+
+    // Funçao para voltar aba
     function handleBack() {
         if(window.history.length > 2) {
         navigate(-1);
@@ -98,6 +120,7 @@ export default function Ranking() {
         }
     }
 
+    // Clicar fora do model fecha ele
     useEffect(() => {
         function handleClickOutside(e) {
           // Se clicar fora do nav E fora da imagem, fecha
@@ -129,9 +152,12 @@ export default function Ranking() {
             <Header />
 
             <div className="w-full min-h-[calc(100vh-100px)] flex xs:flex-row flex-col gap-5 py-10 xs:pt-20 px-[2%] bg-background relative">
+                {/* Volta uma aba */}
                 <button onClick={handleBack}>
                     <Undo2 className="absolute top-3 left-4 cursor-pointer text-white hover:text-gold duration-300"/>
                 </button>
+
+                
                 <div className="w-full xs:w-1/2">
                     <div className="w-full flex flex-col border bg-muted text-white p-5 rounded-sm">
                         <div className="flex justify-between mb-10">
@@ -160,15 +186,12 @@ export default function Ranking() {
                                 <span>Total de pontos</span>
                                 <span className="text-gray-400 flex">
                                     <img src={Trofeu} alt="" className="w-7" />
-                                    {pointsGeral || 0}
+                                    {pointsGeral}
                                 </span>
                             </div>
                             <div className="w-1/2 bg-muted border flex flex-col justify-center items-center gap-1 p-2.5 rounded-sm">
                                 <span>  Seu lugar no ranking</span>
-                                {userRank && (
-                                    <span className="text-gray-400 flex gap-1"> <Trophy className="text-accent" /> {userRank}</span>
-                                )}
-                                
+                                <span className="text-gray-400 flex gap-1"> <Trophy className="text-accent" /> {userRank}</span>
                             </div>
                         </div>
                     )}
@@ -194,7 +217,6 @@ export default function Ranking() {
                                     {user.pointsGeral}
                                     <img src={Trofeu} alt="Trofeu de pontos" className="w-7" />
                                 </span>
-                                {console.log(user)}
                             </li>
                         ))}
                         
