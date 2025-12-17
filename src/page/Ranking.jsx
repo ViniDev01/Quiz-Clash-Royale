@@ -3,9 +3,9 @@ import { useState, useEffect, useRef } from "react";
 import Header from "../components/Home/Header";
 import DetalhesRanking from "../components/Model/DetalhesRanking";
 
-import Ouro from "../assets/ouro.png";
-import Prata from "../assets/prata.png";
-import Bronze from "../assets/bronze.png";
+import Ouro from "../assets/ouro.webp";
+import Prata from "../assets/prata.webp";
+import Bronze from "../assets/bronze.webp";
 import Trofeu from "../assets/trofeu.png";
 
 import { useNavigate } from "react-router-dom";
@@ -40,30 +40,49 @@ export default function Ranking() {
 
         updateDoc(userRef, {
             [`pointsGeral`]: pointsGeral
-        });
-
-    }, [pointsGeral, user]);
-
-    useEffect(()=>{
+        }).then(() => {
+        // Atualiza o ranking depois do update
         const generalPoints = async () => {
             const q = query(
                 collection(db, "users"),
                 orderBy("pointsGeral", "desc"),
                 limit(10)
-            )
+            );
 
             const snapshot = await getDocs(q);
-
             const usersRank = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
+                id: doc.id,
+                ...doc.data()
             }));
 
             setRanking(usersRank);
         }
 
         generalPoints();
-    }, []);
+    });
+
+    }, [pointsGeral, user]);
+
+    // useEffect(()=>{
+    //     const generalPoints = async () => {
+    //         const q = query(
+    //             collection(db, "users"),
+    //             orderBy("pointsGeral", "desc"),
+    //             limit(10)
+    //         )
+
+    //         const snapshot = await getDocs(q);
+
+    //         const usersRank = snapshot.docs.map(doc => ({
+    //         id: doc.id,
+    //         ...doc.data()
+    //         }));
+
+    //         setRanking(usersRank);
+    //     }
+
+    //     generalPoints();
+    // }, []);
 
     useEffect(()=>{
         if(pointsGeral === undefined) return;
@@ -188,6 +207,7 @@ export default function Ranking() {
                                     {user.pointsGeral}
                                     <img src={Trofeu} alt="Trofeu de pontos" className="w-7" />
                                 </span>
+                                {console.log(user)}
                             </li>
                         ))}
                         

@@ -1,7 +1,8 @@
 
 import React, {useEffect, useState} from 'react';
-import BannerImg from '../../assets/Banner.png';
-import banner1280 from "../../assets/Banner1280.png";
+import BannerImg from '../../assets/Banner.webp';
+import Banner1280 from "../../assets/Banner1280.webp";
+import Banner721 from "../../assets/Banner721.png";
 import { Link } from 'react-router-dom';
 
 import {db} from "../../firebase/firebaseConfig";
@@ -60,15 +61,15 @@ function Banner() {
       )}
 
       <picture>
-        <source media="(max-width: 1280px)" srcSet={banner1280} />
+        <source media="(max-width: 721px)" srcSet={Banner721} />
+        <source media="(max-width: 1280px)" srcSet={Banner1280} />
         <source media='(min-width: 1280px)' srcSet={BannerImg} />
         <img 
-          src={banner1280} 
+          src={Banner1280} 
           alt="Banner Clash Royale" 
           className='w-full h-auto object-cover relative' 
           draggable={false}
           onLoad={() => setImgLoaded(true)}
-          style={{ opacity: imgLoaded ? 1 : 0, transition: "opacity .3s" }}
         /> 
       </picture>
       
