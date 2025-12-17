@@ -14,6 +14,7 @@ import { Trophy, MoveRight, Undo2 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { collection, doc, getDocs, limit, orderBy, query, updateDoc, where } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
+import { Helmet } from "react-helmet-async";
 
 export default function Ranking() {
     const navigate = useNavigate();
@@ -62,27 +63,6 @@ export default function Ranking() {
     });
 
     }, [pointsGeral, user]);
-
-    // useEffect(()=>{
-    //     const generalPoints = async () => {
-    //         const q = query(
-    //             collection(db, "users"),
-    //             orderBy("pointsGeral", "desc"),
-    //             limit(10)
-    //         )
-
-    //         const snapshot = await getDocs(q);
-
-    //         const usersRank = snapshot.docs.map(doc => ({
-    //         id: doc.id,
-    //         ...doc.data()
-    //         }));
-
-    //         setRanking(usersRank);
-    //     }
-
-    //     generalPoints();
-    // }, []);
 
     useEffect(()=>{
         if(pointsGeral === undefined) return;
@@ -139,6 +119,13 @@ export default function Ranking() {
 
     return (
         <>
+            <Helmet>
+                <title>Ranking | Quiz Clash Royale</title>
+                <meta
+                name="description"
+                content="Veja o ranking do Quiz Clash Royale, acompanhe os melhores jogadores e dispute as primeiras posições."
+                />
+            </Helmet>
             <Header />
 
             <div className="w-full min-h-[calc(100vh-100px)] flex xs:flex-row flex-col gap-5 py-10 xs:pt-20 px-[2%] bg-background relative">

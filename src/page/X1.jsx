@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect } from "react";
 import { Crown, Zap, Trophy, RefreshCw, RefreshCcw, Undo2 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 
 import Header from "../components/X1/header";
 import Title from "../components/X1/title";
@@ -10,9 +9,11 @@ import Title from "../components/X1/title";
 // Firebase imports
 import { db } from "../firebase/firebaseConfig";
 import { collection, getDocs, updateDoc } from "firebase/firestore";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { useAuth } from "../context/AuthContext";
+import { Helmet } from "react-helmet-async";
+
 
 function X1() {
   const navigate = useNavigate();
@@ -151,6 +152,13 @@ function X1() {
   }
   return (
     <div className="min-h-screen bg-background text-foreground flex justify-center items-center px-[4%]">
+      <Helmet>
+        <title>X1 | Quiz Clash Royale</title>
+        <meta
+          name="description"
+          content="Desafie outros jogadores no modo X1 do Quiz Clash Royale e prove seus conhecimentos em duelos diretos."
+        />
+      </Helmet>
         <button onClick={handleBack}>
           <Undo2 className="absolute top-3 left-4 cursor-pointer hover:text-gold duration-300"/>
         </button>

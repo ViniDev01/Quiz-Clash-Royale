@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Undo2 } from "lucide-react";
 import { useState } from "react";
 import ModelContato from "../components/Model/Contato";
+import { Helmet } from "react-helmet-async";
 
 export default function Contato() {
     const navigate = useNavigate();
@@ -17,6 +18,14 @@ export default function Contato() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex items-center justify-center px-4 py-16 font-poppins">
+        <Helmet>
+            <title>Contato | Quiz Clash Royale</title>
+            <meta
+            name="description"
+            content="Entre em contato com a equipe do Quiz Clash Royale para dúvidas, sugestões ou suporte. Estamos prontos para ajudar."
+            />
+        </Helmet>
+        
         <button onClick={handleBack}>
             <Undo2 className="absolute top-3 left-4 cursor-pointer hover:text-gold duration-300"/>
         </button>

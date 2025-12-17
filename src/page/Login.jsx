@@ -10,6 +10,7 @@ import { db } from "../firebase/firebaseConfig"; // ajuste o caminho
 
 import { useNavigate, Link } from 'react-router-dom';
 import RedefinirSenha from '../components/Model/RedefinirSenha';
+import { Helmet } from "react-helmet-async";
 
 
 function Login() {  
@@ -113,6 +114,14 @@ function Login() {
     
     return (
         <div className="bg-[#f5f5f5] flex justify-center items-center min-h-screen font-poppins relative px-4">
+
+            <Helmet>
+                <title>Login | Quiz Clash Royale</title>
+                <meta
+                name="description"
+                content="Faça login no Quiz Clash Royale para salvar seu progresso, participar do ranking e competir com outros jogadores."
+                />
+            </Helmet>
             {/* Botão voltar */}
             <Link to="/">
                 <Undo2 className="absolute top-3 left-4 cursor-pointer hover:text-gold duration-300"/>

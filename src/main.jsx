@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 import { AuthProvider } from "./context/AuthContext";
 import PublicRoute from "./routes/PublicRoute.jsx"
 import ProtectedRoute from "./routes/ProtectedRoute.jsx";
@@ -18,18 +19,20 @@ import PageNotFound from "./page/PageNotFound.jsx";
 ReactDOM.createRoot(document.getElementById('root')).render(
   <BrowserRouter>
     <AuthProvider>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/quiz/mode/geral/:id" element={<Desafio />} />
-        <Route path="/quiz/mode/x1/:id" element={<X1 />} />
-        <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-        <Route path="/quizzes" element={<Quizzes />} />
-        <Route path="/ranking" element={<Ranking />} />
-        <Route path="/configuracao/:id" element={<ProtectedRoute><ConfigPage /></ProtectedRoute> } />
-        <Route path="/contato" element={<Contato />} />
+      <HelmetProvider>
+        <Routes>
+          <Route path="/" element={<App />} />
+          <Route path="/quiz/mode/geral/:id" element={<Desafio />} />
+          <Route path="/quiz/mode/x1/:id" element={<X1 />} />
+          <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+          <Route path="/quizzes" element={<Quizzes />} />
+          <Route path="/ranking" element={<Ranking />} />
+          <Route path="/configuracao/:id" element={<ProtectedRoute><ConfigPage /></ProtectedRoute> } />
+          <Route path="/contato" element={<Contato />} />
 
-        <Route path="*" element={<PageNotFound />} />
-      </Routes>
+          <Route path="*" element={<PageNotFound />} />
+        </Routes>
+      </HelmetProvider>
     </AuthProvider>
   </BrowserRouter>,
 )

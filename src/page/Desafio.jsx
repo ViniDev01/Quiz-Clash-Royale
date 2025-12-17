@@ -5,7 +5,6 @@ import { Crown, Zap, Trophy, RefreshCw, RefreshCcw, Undo2 } from "lucide-react";
 import Header from "../components/Desafio/ui/header";
 import Title from "../components/Desafio/ui/title";
 import Respostas from "../components/Desafio/ui/respostas";
-import { useNavigate } from "react-router-dom";
 
 // Firebase imports
 import { db } from "../firebase/firebaseConfig";
@@ -13,7 +12,9 @@ import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
 
 import { useAuth } from "../context/AuthContext";
 
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
+
 
 function Desafio() {
   const navigate = useNavigate();
@@ -163,6 +164,13 @@ function Desafio() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex justify-center items-center">
+      <Helmet>
+        <title>Conhecimento | Quiz Clash Royale</title>
+        <meta
+          name="description"
+          content="Aprofunde seus conhecimentos sobre Clash Royale com conteúdos, dicas e curiosidades para melhorar seu desempenho no jogo."
+        />
+      </Helmet>
         <button onClick={handleBack}>
           <Undo2 className="absolute top-3 left-4 cursor-pointer hover:text-gold duration-300"/>
         </button>

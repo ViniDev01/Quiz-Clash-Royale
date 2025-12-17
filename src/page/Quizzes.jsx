@@ -25,6 +25,13 @@ export default function Quizzes() {
 
     return (
         <>
+            <Helmet>
+                <title>Todos os Quizzes | Quiz Clash Royale</title>
+                <meta
+                name="description"
+                content="Explore os quizzes do Quiz Clash Royale, teste seus conhecimentos, ganhe pontos e dispute posições no ranking."
+                />
+            </Helmet>
             <Header />
 
             <Link to="/">

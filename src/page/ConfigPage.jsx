@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { excluirConta } from "../services/ExcluirConta";
 import ExcluirConta from "../components/Model/ExcluirConta";
+import { Helmet } from "react-helmet-async";
 
 export default function ConfigPage() {
   const [selected, setSelected] = useState("perfil");
@@ -93,7 +94,13 @@ export default function ConfigPage() {
 
   return (
     <div className="flex w-full min-h-screen bg-background text-foreground font-poppins flex-col lg:flex-row">
-
+      <Helmet>
+        <title>Configurações | Quiz Clash Royale</title>
+        <meta
+          name="description"
+          content="Configure sua experiência no Quiz Clash Royale: personalize preferências, ajuste opções da conta e melhore sua navegação."
+        />
+      </Helmet>
       {/* === BOTÃO MOBILE === */}
       <div className="flex lg:hidden w-full justify-between items-center px-4 pt-4">
         <h1 className="text-xl font-semibold text-gold">Configurações</h1>
