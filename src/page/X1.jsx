@@ -8,7 +8,7 @@ import Title from "../components/X1/title";
 
 // Firebase imports
 import { db } from "../firebase/firebaseConfig";
-import { collection, getDocs, updateDoc } from "firebase/firestore";
+import { collection, getDocs, updateDoc, doc } from "firebase/firestore";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { useAuth } from "../context/AuthContext";
@@ -30,12 +30,17 @@ function X1() {
   const startQuiz = () => {
     setQuizStarted('quiz');
     setIndexAtual(0);
+    setShowFeedback(false);
+    setSelectedOption(null);
     setScore(0);
     setPoints(1);
   }
 
   const resetQuiz = () => {
     setQuizStarted('start');
+    setIndexAtual(0);
+    setShowFeedback(false);
+    setSelectedOption(null);
     setScore(0);
     setPoints(1);
   }
