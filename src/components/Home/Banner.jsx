@@ -2,7 +2,7 @@
 import React, {useEffect, useState} from 'react';
 import BannerImg from '../../assets/Banner.webp';
 import Banner1280 from "../../assets/Banner1280.webp";
-import Banner721 from "../../assets/Banner721.png";
+import Banner721 from "../../assets/Banner721.webp";
 import { Link } from 'react-router-dom';
 
 import {db} from "../../firebase/firebaseConfig";
