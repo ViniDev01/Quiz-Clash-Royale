@@ -4,6 +4,7 @@ import Footer from "../components/Home/Footer";
 
 import { Link } from "react-router-dom";
 import { Undo2 } from "lucide-react";
+import { Helmet } from "react-helmet-async";
 
 
 export default function Quizzes() {
