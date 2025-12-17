@@ -68,7 +68,10 @@ function Banner() {
           src={Banner1280} 
           alt="Banner Clash Royale" 
           className='w-full h-auto object-cover relative' 
+          fetchPriority='high'
           draggable={false}
+          width={1280}
+          height={720}
           onLoad={() => setImgLoaded(true)}
         /> 
       </picture>
