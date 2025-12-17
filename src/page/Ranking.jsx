@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { Trophy, MoveRight, Undo2 } from "lucide-react";
 
 import { useAuth } from "../context/AuthContext";
-import { collection, doc, getDocs, limit, orderBy, query, updateDoc, where } from "firebase/firestore";
+import { collection, doc, getDocs, limit, orderBy, query, updateDoc, where, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 import { Helmet } from "react-helmet-async";
 
@@ -37,7 +37,12 @@ export default function Ranking() {
     }, [userData?.pointsQuizzes]);
 
     useEffect(()=>{
-        if(!user || pointsGeral === null) return;
+        if(!user || pointsGeral === null) {
+            return;
+        };
+        if (userData?.pointsGeral === pointsGeral) {
+            return;
+        };
 
         const savePointsGeral = async () => {
             try {
