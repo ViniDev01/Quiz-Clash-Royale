@@ -3,7 +3,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
 
 import { db } from "../firebase/firebaseConfig";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 
 const AuthContext = createContext({});
 
@@ -13,33 +13,40 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (usuario) => {
-      setUser(usuario); // null ou user
+    let unsubscribeUserDoc = null;
 
-      if(usuario) {
-        try {
-          const userRef = doc(db, "users", usuario.uid);
-          const userSnap = await getDoc(userRef);
+    const unsubscribeAuth = onAuthStateChanged(auth, (usuario) => {
+      setUser(usuario);
 
-          if(userSnap.exists()){
-            setUserData(userSnap.data());
-          }else {
-            setUserData(null);
-          }
-        }catch (error) {
-          console.error("Erro ao buscar dados do usuário:", error);
-          setUserData(null);
-        }
-      } else {
-        setUserData(null);
+      // limpa listener anterior
+      if (unsubscribeUserDoc) {
+        unsubscribeUserDoc();
+        unsubscribeUserDoc = null;
       }
 
-      setLoading(false);
-      
+      if (usuario) {
+        const userRef = doc(db, "users", usuario.uid);
+
+        unsubscribeUserDoc = onSnapshot(userRef, (snap) => {
+          if (snap.exists()) {
+            setUserData({ id: snap.id, ...snap.data() });
+          } else {
+            setUserData(null);
+          }
+          setLoading(false);
+        });
+      } else {
+        setUserData(null);
+        setLoading(false);
+      }
     });
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribeAuth();
+      if (unsubscribeUserDoc) unsubscribeUserDoc();
+    };
   }, []);
+
 
   return (
     <AuthContext.Provider value={{ user, userData, loading }}>

@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { Trophy, MoveRight, Undo2 } from "lucide-react";
 
 import { useAuth } from "../context/AuthContext";
-import { collection, doc, getDocs, limit, orderBy, query, updateDoc, where, serverTimestamp } from "firebase/firestore";
+import { collection, doc, getDocs, limit, orderBy, query, updateDoc, where, serverTimestamp, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 import { Helmet } from "react-helmet-async";
 
@@ -34,20 +34,16 @@ export default function Ranking() {
         .reduce((total, value) => total + value, 0);
 
         setPointsGeral(total);
-    }, [userData?.pointsQuizzes]);
-
-    useEffect(()=>{
-        if(!user || pointsGeral === null) {
-            return;
-        };
-        if (userData?.pointsGeral === pointsGeral) {
+        
+        
+        if (userData.pointsGeral === total) {
             return;
         };
 
         const savePointsGeral = async () => {
             try {
                 await updateDoc(doc(db, "users", user.uid), {
-                    pointsGeral: pointsGeral,
+                    pointsGeral: total,
                     pointsUpdatedAt: serverTimestamp()
                 })
             }catch (error) {
@@ -56,7 +52,7 @@ export default function Ranking() {
         }
 
         savePointsGeral();
-    }, [pointsGeral, user]);
+    }, [user, userData?.pointsQuizzes]);
 
     // Chama o getUserRank e coloca no estado setUserRank
     useEffect(()=>{
@@ -95,24 +91,26 @@ export default function Ranking() {
     }
 
     useEffect(()=>{
-        const generalPoints = async () => {
-            const q = query(
-                collection(db, "users"),
-                orderBy("pointsGeral", "desc"),
-                limit(10)
-            );      
-            
-            const snapshot = await getDocs(q);
-
+        const q = query(
+            collection(db, "users"),
+            orderBy("pointsGeral", "desc"),
+            limit(10)
+        );      
+        
+        const unsubscribe = onSnapshot(q, (snapshot) => {
             setRanking(
                 snapshot.docs.map(doc => ({
                     id: doc.id,
                     ...doc.data()
                 }))
             );
+        });
+
+            
+        return () => {
+            unsubscribe();
         }
 
-        generalPoints();
     }, []);
 
 

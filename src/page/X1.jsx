@@ -99,10 +99,12 @@ function X1() {
 
   // Verificar se o user ja tenha feito esse quiz
 
-  function verificarPoints() {
+  async function verificarPoints() {
     if(!user || !userData) return;
 
     const pointsAtuais = userData.pointsQuizzes?.[id] || 0;
+
+    
 
     if (points > pointsAtuais) {
       const userRef = doc(db, "users", user.uid);
@@ -111,6 +113,8 @@ function X1() {
         [`pointsQuizzes.${id}`]: points
       });
     }
+
+    
   }
 
   // Função para obter a classe CSS da resposta com base no estado
