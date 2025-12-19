@@ -47,7 +47,7 @@ function Header() {
         {user ? (
           <div>
             <div ref={avatarRef} className='absolute top-1/2 right-5 -translate-y-1/2 w-8 h-8' onClick={()=>setOpen(!open)}>
-              <img src={imgUser} alt="" className='w-full h-full rounded-full cursor-pointer' />
+              <img src={imgUser} alt="User" className='w-full h-full rounded-full cursor-pointer' draggable={false} />
             </div>
 
               <nav ref={menuRef} className={`
@@ -73,7 +73,7 @@ function Header() {
             className='absolute top-1/2 right-5 -translate-y-1/2' 
             aria-label="Ir para a página de login"
           >
-            <CircleUserRound className='text-terciaria cursor-pointer' aria-hidden="true" />
+            <CircleUserRound className='text-terciaria cursor-pointer' aria-hidden="true"/>
           </Link>
         )}
     </header>

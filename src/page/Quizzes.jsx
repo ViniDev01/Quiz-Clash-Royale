@@ -44,9 +44,9 @@ export default function Quizzes() {
                 {quizzes.map((quiz, index) => (
                     <Link to={`/quiz/mode/${quiz.mode}/${quiz.id}`} key={index} className="w-3/4 so:w-[calc(50%-20px)] xs:w-[calc(25%-20px)] bg-secundaria rounded-2xl hover:scale-105 transition-all duration-300 overflow-hidden cursor-pointer mt-5">
                         <div className='aspect-283/249 overflow-x-hidden'>
-                            <img src={quiz.img} alt={quiz.title} className="w-full h-full object-cover" />
+                            <img src={quiz.img} alt={quiz.title} className="w-full h-full object-cover" draggable="false" />
                         </div>
-                        <h1 className="m-2 h-8 text-white xr:text-base xs:text-[1.5vw] tb:text-2xl overflow-hidden" title={quiz.title}>{quiz.title}</h1>
+                        <h1 className="m-2 tc:h-8 text-white tc:text-[3.5vw] xs:text-[1.5vw] tb:text-2xl overflow-hidden" title={quiz.title}>{quiz.title}</h1>
                         <p className="mt-2 ml-2.5 mb-5 text-white text-xs">Criado por: {quiz?.creator || "SVINICIOS"}</p>
                     </Link>
                 ))}

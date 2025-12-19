@@ -82,7 +82,7 @@ function Main() {
                     key={quiz.id}
                   >
                     <div className='aspect-283/249 overflow-x-hidden'>
-                      <img src={quiz.img} alt={quiz.title} className='w-full h-full'/>
+                      <img src={quiz.img} alt={quiz.title} className='w-full h-full' draggable='false' />
                     </div>
                   </Link>                
               ))}
@@ -97,11 +97,11 @@ function Main() {
                     title={quiz.title}
                   >
                     <div className='aspect-283/249 overflow-x-hidden'>
-                      <img src={quiz.img} alt={quiz.title} className='w-full h-full object-cover'/>
+                      <img src={quiz.img} alt={quiz.title} className='w-full h-full object-cover' draggable='false' />
                     </div>
                     
                     
-                    <h1 className='h-16 leading-16 pl-2 capitalize font-semibold text-white text-[1.5vw] tb:text-base cursor-pointer overflow-hidden'>{quiz.title}</h1>
+                    <h1 className=' leading-16 pl-2 capitalize font-semibold text-white so:text-[2.5vw] xs:text-[1.5vw] tb:text-lg cursor-pointer overflow-hidden'>{quiz.title}</h1>
                   </Link>
                 ))}
             </div>
