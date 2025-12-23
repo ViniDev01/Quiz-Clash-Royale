@@ -173,6 +173,7 @@ function Login() {
                     <p className="text-sm mt-4 self-center">
                         Não tem uma conta? 
                         <button 
+                            type='button'
                             className="text-blue-500 hover:underline ml-1 cursor-pointer" 
                             onClick={() => setOpen(true)}
                         >
@@ -186,7 +187,7 @@ function Login() {
             {open && (
                 <form 
                     onSubmit={handleRegister} 
-                    className="bg-white flex flex-col p-8 sm:p-10 rounded-lg w-full max-w-sm sm:max-w-md shandow-md"
+                    className="bg-white flex flex-col p-8 sm:p-10 rounded-lg w-full max-w-sm sm:max-w-md shadow-md"
                 >
                     <h2 className="text-3xl font-semibold uppercase mb-5">Registre-se</h2>
 
@@ -283,7 +284,7 @@ incluindo 1 letra maiúscula,
                     
                     {/* LINK Acesso */}
                     <p className="text-sm mt-4 text-center">
-                        Ja tenho uma conta? <button className="text-blue-500 hover:underline cursor-pointer" onClick={()=>setOpen(false)}>Acessar</button>
+                        Ja tenho uma conta? <button type='button' className="text-blue-500 hover:underline cursor-pointer" onClick={()=>setOpen(false)}>Acessar</button>
                     </p>
                 </form>
             )}
