@@ -5,20 +5,25 @@ import { sendPasswordResetEmail } from "firebase/auth";
 export default function RedefinirSenha({ setModelRedefinir }) {
     const [resetEmail, setResetEmail] = useState("");
     const [resetError, setResetError] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
 
     async function handleResetPassword() {
-        if(!resetEmail.trim() === "") {
+        if(resetEmail.trim() === "") {
             setResetError("Digite seu email!");
             return;
         }
 
+        setResetError("");
+
         try {
             await sendPasswordResetEmail(auth, resetEmail);
-            alert("Email enviado! Verifique sua caixa de entrada.");
+            setSuccessMessage("Email enviado! Verifique sua caixa de entrada.");
             await setModelRedefinir(false);
         }catch (err) {
             if (err.code === "auth/user-not-found") {
                 setResetError("Este email não está cadastrado.");
+            } else if (err.code === "auth/invalid-email") {
+                setResetError("Email inválido.");
             } else {
                 setResetError("Erro ao enviar email.");
             }
@@ -27,7 +32,7 @@ export default function RedefinirSenha({ setModelRedefinir }) {
 
     return (
         <div className="w-full h-full fixed top-0 left-0 flex justify-center items-center bg-[rgba(0,0,0,0.5)] cursor-pointer" onClick={()=>setModelRedefinir(false)}>
-            <div className="bg-card border border-border rounded-2xl p-8 shadow-xl cursor-default" onClick={(e)=>e.stopPropagation()}>
+            <div className="max-w-[489px] w-full bg-card border border-border rounded-2xl p-8 shadow-xl cursor-default" onClick={(e)=>e.stopPropagation()}>
                 <h2 className="text-lg text-foreground font-bold">Recuperar senha</h2>
 
                 <input 
@@ -35,11 +40,15 @@ export default function RedefinirSenha({ setModelRedefinir }) {
                     placeholder="Digite seu email"
                     value={resetEmail}
                     onChange={(e) => setResetEmail(e.target.value)}
-                    className="rounded-md px-3 py-2 w-full mt-3 bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full rounded-md px-3 py-2 mt-3  bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                 />
 
                 {resetError && (
                     <p className="text-red-500 text-sm mt-2">{resetError}</p>
+                )}
+
+                {successMessage && (
+                    <p className="text-green-500 text-sm mt-2">{successMessage}</p>
                 )}
 
                 <button 

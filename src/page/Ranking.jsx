@@ -12,47 +12,50 @@ import { useNavigate } from "react-router-dom";
 import { Trophy, MoveRight, Undo2 } from "lucide-react";
 
 import { useAuth } from "../context/AuthContext";
-import { collection, doc, getDocs, limit, orderBy, query, updateDoc, where, serverTimestamp, onSnapshot } from "firebase/firestore";
+import { getFunctions, httpsCallable } from "firebase/functions"; 
+import { collection, doc, getDocs, limit, orderBy, query, where, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 import { Helmet } from "react-helmet-async";
+import { use } from "react";
 
 export default function Ranking() {
     const navigate = useNavigate();
-    const {user, userData} = useAuth();
+    const {user} = useAuth();
     const [pointsGeral, setPointsGeral] = useState(null); // Os pontos geral do user individual 
     const [ranking, setRanking] = useState([]);
     const [userRank, setUserRank] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
     const boxRef = useRef();
     const containerRef = useRef();
+    const functions = getFunctions();
+    const atualizarPointsGeralCallable = httpsCallable(functions, 'atualizarPointsGeral');
 
     // Somar os Pontos dos quizzes
     useEffect(()=>{
-        if(!userData?.pointsQuizzes) return;
-
-        const total = Object.values(userData.pointsQuizzes)
-        .reduce((total, value) => total + value, 0);
-
-        setPointsGeral(total);
-        
-        
-        if (userData.pointsGeral === total) {
-            return;
+        async function atualizarPointsGeral() {
+            await atualizarPointsGeralCallable()
         };
 
-        const savePointsGeral = async () => {
-            try {
-                await updateDoc(doc(db, "users", user.uid), {
-                    pointsGeral: total,
-                    pointsUpdatedAt: serverTimestamp()
-                })
-            }catch (error) {
-                console.error("Erro ao salvar pointsGeral:", error);
-            }
-        }
+        atualizarPointsGeral();
+    }, []);
 
-        savePointsGeral();
-    }, [user, userData?.pointsQuizzes]);
+    useEffect(()=>{
+        if(!user) {
+            setPointsGeral(null);
+            return;
+        }
+         const userRef = doc(db, "users", user.uid);
+         const unsubscribe = onSnapshot(userRef, (docSnap) => {
+             if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    setPointsGeral(data.pointsGeral || 0);
+                }
+            });
+
+        return () => {
+            unsubscribe();
+        }
+    }, [user]);
 
     // Chama o getUserRank e coloca no estado setUserRank
     useEffect(()=>{

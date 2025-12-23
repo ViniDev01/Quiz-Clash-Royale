@@ -27,3 +27,10 @@ dist-ssr
 .env.local
 .env.development
 .env.production
+
+
+# Backend functions/functions/node_modules
+functions/node_modules/
+functions/.env
+functions/.env.*
+

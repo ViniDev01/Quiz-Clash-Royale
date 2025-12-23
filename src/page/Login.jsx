@@ -3,10 +3,8 @@ import React, {useState} from 'react';
 import { UserRound, LockKeyhole, Undo2, EyeClosed, Eye, Mail } from 'lucide-react';
 
 // Firebase imports
-import { registrarUsuario } from "../auth/register";
+import { registerUser } from "../auth/register";
 import { loginComUsernameOuEmail } from "../auth/login";
-import { collection, where, query, getDocs, doc, setDoc } from "firebase/firestore";
-import { db } from "../firebase/firebaseConfig"; // ajuste o caminho
 
 import { useNavigate, Link } from 'react-router-dom';
 import RedefinirSenha from '../components/Model/RedefinirSenha';
@@ -29,62 +27,30 @@ function Login() {
 
     const navigate = useNavigate();
 
-    async function verificarUsername(username) {
-        const q = query(
-            collection(db, "users"),
-            where("username", "==", username.toLowerCase())
-        );
-
-        const querySnapshot = await getDocs(q);
-        return !querySnapshot.empty;
-    }
-
     async function handleRegister(e) {
         e.preventDefault();
 
-        if(username.trim() === "") {
-            setErrorRegister("O username está vazio!");
-            return;
-        }
+        if (!username || !email || !senha) return;
 
-        if(email.trim() === "") {
-            setErrorRegister("email está vazio!");
-            return;
-        }
-
-        if(senha.trim() === "") {
-            setErrorRegister("A senha está vazia!");
-            return;
-        }
-
-        const usernameExiste = await verificarUsername(username);
-
-        if (usernameExiste) {
-            setErro("Username já existe!");
-            return alert("Username já existe!");
-        }
         setLoading(true);
         setErro("");
 
         try {
-            const usuario = await registrarUsuario(email, senha);
-            const uid = usuario.uid;
-            alert("Cadastro realizado com sucesso!");
-
-            await setDoc(doc(db, "users", uid), {
-                email: email,
-                username: username.toLowerCase(),
-                createdAt: new Date(),
-                poinstGeral: 0
-            });
-
+            await registerUser(email, senha, username);
             navigate("/");
+            
 
-        } catch (err) {
-            setErro("Erro ao cadastrar: " + err.message);
+        } catch (error) {
+            if (error.code === "auth/email-already-in-use") {
+                setErrorRegister("Este email já está cadastrado");
+            }
+            else if (error.code === "functions/already-exists") {
+                setErrorRegister("Username já existe");
+            } else {
+                setErrorRegister("Erro ao cadastrar");
+            }
         } finally {
             setLoading(false);
-
         }
     }
 
@@ -101,8 +67,7 @@ function Login() {
         }
 
         try {
-        const user = await loginComUsernameOuEmail(login, password);
-        console.log("Logado:", user.uid);
+        await loginComUsernameOuEmail(login, password);
         navigate("/");
 
         } catch (err) {

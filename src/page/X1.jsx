@@ -5,10 +5,12 @@ import { Crown, Zap, Trophy, RefreshCw, RefreshCcw, Undo2 } from "lucide-react";
 import Header from "../components/X1/header";
 import Title from "../components/X1/title";
 
+import { getFunctions, httpsCallable } from "firebase/functions"; 
+
 
 // Firebase imports
 import { db } from "../firebase/firebaseConfig";
-import { collection, getDocs, updateDoc, doc } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { useAuth } from "../context/AuthContext";
@@ -18,7 +20,7 @@ import { Helmet } from "react-helmet-async";
 function X1() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { user, userData } = useAuth();
+  const { user } = useAuth();
   const [quizStarted, setQuizStarted] = useState('start'); // 'start', 'quiz', 'result'
   const [currentQuestion ,setCurrentQuestion] = useState([]); // Pergunta atual
   const [indexAtual, setIndexAtual] = useState(0); // Índice da pergunta atual
@@ -26,6 +28,9 @@ function X1() {
   const [selectedOption, setSelectedOption] = useState(null); // Opção selecionada pelo usuário
   const [score, setScore] = useState(0); // Pontuação do usuário
   const [points, setPoints] = useState(0);
+
+  const functions = getFunctions();
+  const verificarPointsCallable = httpsCallable(functions, 'verificarPoints');
 
   const startQuiz = () => {
     setQuizStarted('quiz');
@@ -100,21 +105,7 @@ function X1() {
   // Verificar se o user ja tenha feito esse quiz
 
   async function verificarPoints() {
-    if(!user || !userData) return;
-
-    const pointsAtuais = userData.pointsQuizzes?.[id] || 0;
-
-    
-
-    if (points > pointsAtuais) {
-      const userRef = doc(db, "users", user.uid);
-
-      updateDoc(userRef, {
-        [`pointsQuizzes.${id}`]: points
-      });
-    }
-
-    
+    await verificarPointsCallable({ quizId: id, points: points });
   }
 
   // Função para obter a classe CSS da resposta com base no estado

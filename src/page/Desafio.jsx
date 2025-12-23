@@ -7,6 +7,7 @@ import Title from "../components/Desafio/ui/title";
 import Respostas from "../components/Desafio/ui/respostas";
 
 // Firebase imports
+import { getFunctions, httpsCallable } from "firebase/functions"; 
 import { db } from "../firebase/firebaseConfig";
 import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
 
@@ -19,7 +20,7 @@ import { Helmet } from "react-helmet-async";
 function Desafio() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { user, userData } = useAuth();
+  const { user } = useAuth();
   const [quiz, setQuiz] = useState([]);
   const [quizStarted, setQuizStarted] = useState('start'); // 'start', 'quiz', 'result'
   const [indexAtual, setIndexAtual] = useState(0); // Índice da pergunta atual
@@ -27,6 +28,9 @@ function Desafio() {
   const [selectedOption, setSelectedOption] = useState(null); // Opção selecionada pelo usuário
   const [score, setScore] = useState(0); // Pontuação de acertos
   const [points, setPoints] = useState(2); // Pontuação para o ranking
+
+  const functions = getFunctions();
+  const verificarPointsCallable = httpsCallable(functions, 'verificarPoints');
 
   // Função para iniciar o quiz
   const startQuiz = () => {
@@ -101,20 +105,9 @@ function Desafio() {
   }
 
   // Verificar se o user ja tenha feito esse quiz
-  function verificarPoints() {
-    if(!user || !userData) return;
-
-    const pontosAtuais = userData.pointsQuizzes?.[id] || 0;
-
-    if (points > pontosAtuais) {
-      const userRef = doc(db, "users", user.uid);
-
-      updateDoc(userRef, {
-        [`pointsQuizzes.${id}`]: points
-      });
-    }
-
-  };
+  async function verificarPoints() {
+    await verificarPointsCallable({ quizId: id, points: points });
+  }
 
   // Função para obter a classe CSS da resposta com base no estado
   const getAnswerClass = (optionIndex) => {
